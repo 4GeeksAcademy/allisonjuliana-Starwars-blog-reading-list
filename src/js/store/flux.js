@@ -12,7 +12,13 @@ const getState = ({ getStore, getActions, setStore }) => {
 					background: "white",
 					initial: "white"
 				}
-			]
+			],
+			characters: [],
+			favorites: [],
+			planets: [],
+			specificCharacters: {},
+			specificPlanet: {},
+
 		},
 		actions: {
 			// Use getActions to call a function within a fuction
@@ -37,7 +43,57 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 				//reset the global store
 				setStore({ demo: demo });
-			}
+			},
+			loadCharacters: () => {
+				fetch("https://swapi.tech/api/people/")
+					.then(response => response.json())
+					.then(data => {
+						setStore({ characters: data.results });
+					})
+					.catch(error => console.log(error));
+
+			},
+
+			loadPlanets: () => {
+				fetch("https://swapi.tech/api/planets/")
+					.then(response => response.json())
+					.then(data => {
+						setStore({ planets: data.results });
+					})
+					.catch(error => console.log(error));
+			},
+
+			loadSpecificCharacter: async (theid) => {
+				const resp = await fetch(`https://swapi.dev/api/people/${theid}`)
+					.then(response => response.json())
+					.then(data => {
+						setStore({ specificCharacter: data });
+					})
+					.catch(error => console.log(error));
+			},
+
+			loadSpecificPlanet: async (theid) => {
+				const resp = await fetch(`https://swapi.dev/api/planets/${theid}`)
+					.then(response => response.json())
+					.then(data => {
+						setStore({ specificPlanet: data });
+					})
+					.catch(error => console.log(error));
+			},
+
+			addFavorites: (item) => {
+				const store = getStore();
+				setStore({ favorites: [...store.favorites, item] });
+			},
+
+
+			deleteFavorites: (item) => {
+				const store = getStore();
+				const favorites = store.favorites;
+				const index = favorites.indexOf(item);
+				favorites.splice(index, 1);
+				setStore({ favorites });
+			},
 		}
 	};
 };
