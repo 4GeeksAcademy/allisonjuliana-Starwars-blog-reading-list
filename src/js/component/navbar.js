@@ -6,7 +6,6 @@ import { Context } from "../store/appContext";
 export const Navbar = () => {
 
   const { store, actions } = useContext(Context);
-  console.log(store.favorites);
 
   return (
     <nav className="navbar navbar-expand-lg bg-body-tertiary">
@@ -36,9 +35,9 @@ export const Navbar = () => {
                   store.favorites.length === 0 ? (
                     <li className="py-5" >Don't you have favorites?</li>
                   ) : (
-                    store.favorites.map((item) => {
+                    store.favorites.map((item, index) => {
                       return (
-                        <li className="d-flex justify-content-between py-2" key={item.uid} >
+                        <li className="d-flex justify-content-between py-2" key={index} >
                           <a className="dropdown-item " href="#">{item}</a>
                           <button
                             onClick={() => actions.deleteFavorites(item.uid)}

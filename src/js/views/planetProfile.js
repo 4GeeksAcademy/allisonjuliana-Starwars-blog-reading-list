@@ -1,6 +1,8 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useEffect, useContext } from "react";
+// import React, { useState, useEffect, useContext } from "react";
 import { Context } from "../store/appContext";
 import { Link, useParams } from "react-router-dom";
+// import { Link, useParams } from "react-router-dom";
 
 const PlanetProfile = props => {
 
@@ -22,7 +24,7 @@ const PlanetProfile = props => {
                 <div className="col-4 ms-auto mt-5">
                     <img
                         src={`https://starwars-visualguide.com/assets/img/planets/${params.theid}.jpg`}
-                        onError={(event) => event.target.src = "https://via.placeholder.com/600?text=Character+Image+Not+Found"}
+                        onError={(event) => event.target.src = "https://placehold.co/600x400.png?text=Image+Not+Found"}
                         className="card-img-top"
                         alt={store.specificPlanet?.name}
                     />

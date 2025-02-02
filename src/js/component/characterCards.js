@@ -11,13 +11,13 @@ const CharacterCards = () => {
     }, []);
 
     console.log(store.characters);
-    const characterItems = store.characters.map((character) => (
+    const characterItems = store.characters.map((character, index) => (
 
-        <div className="card-container mb-4" key={character.uid}>
+        <div className="card-container mb-4" key={index}>
             <div className="card h-100" >
                 <img
                     src={`https://starwars-visualguide.com/assets/img/characters/${character.uid}.jpg`}
-                    onError={(event) => event.target.src = "https://via.placeholder.com/300?text=Character+Image+Not+Found"}
+                    onError={(event) => event.target.src = "https://placehold.co/600x400.png?text=Image+Not+Found"}
                     className="card-img-top"
                     alt={character.name}
                 />

@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
+// import React, { useEffect, useState } from "react";
 import rigoImage from "../../img/rigo-baby.jpg";
 import "../../styles/home.css";
 import CharacterCards from "../component/characterCards";
