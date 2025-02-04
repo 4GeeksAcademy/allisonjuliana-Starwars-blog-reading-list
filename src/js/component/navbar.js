@@ -1,57 +1,50 @@
 import React, { useContext } from "react";
-import { Link } from "react-router-dom";
-import "./../../styles/navbar.css";
 import { Context } from "../store/appContext";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { Link } from "react-router-dom";
 
 export const Navbar = () => {
-
-  const { store, actions } = useContext(Context);
-
-  return (
-    <nav className="navbar navbar-expand-lg bg-body-tertiary">
-      <div className="container-fluid">
-        <Link className="navbar-brand" to="/">
-          <img
-            src="https://github.com/4GeeksAcademy/Starwars-Blog-List-Sharguidev/blob/master/src/img/star-wars-seeklogo.png?raw=true"
-            style={{ width: "100px" }}
-            className="ms-4"
-          ></img>
-        </Link>
-
-        <div className="collapse navbar-collapse" id="navbarNavDropdown">
-          <ul className="navbar-nav ms-auto">
-            <li className="nav-item dropdown me-5">
-              <a
-                className="nav-link dropdown-toggle btn btn-primary text-white"
-                href="#"
-                role="button"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-              >
-                Favorites <span>{store.favorites.length}</span>
-              </a>
-              <ul className="dropdown-menu text-start dropdown-menu-end">
-                {
-                  store.favorites.length === 0 ? (
-                    <li className="py-5" >Don't you have favorites?</li>
-                  ) : (
-                    store.favorites.map((item, index) => {
-                      return (
-                        <li className="d-flex justify-content-between py-2" key={index} >
-                          <a className="dropdown-item " href="#">{item}</a>
-                          <button
-                            onClick={() => actions.deleteFavorites(item.uid)}
-                          ><i className="fa-solid fa-trash"></i></button>
-                        </li>
-                      );
-                    })
-                  )
-                }
-              </ul>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </nav>
-  );
+	const { store, actions } = useContext(Context);
+	return (
+		<nav className="navbar mb-3">
+			<Link to="/">
+				<span className="navbar-brand mb-0 h1">
+					<img
+						src="https://upload.wikimedia.org/wikipedia/commons/5/5a/Star_Wars_Logo..png"
+						alt="Star Wars Logo"
+						style={{ width: '120px', height: 'auto' }}
+					/>
+				</span>
+			</Link>
+			<div className="btn-group me-5">
+				<button className="btn btn-primary btn-lg dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+					Favorites ({store.favorites.length})
+				</button>
+				<ul className="dropdown-menu">
+					{store.favorites.length > 0 ? (
+						store.favorites.map((favorite) => (
+							<li key={favorite.uid} className="dropdown-item d-flex justify-content-between align-items-center">
+								{favorite.category && favorite.uid ? (
+									<Link to={`/${favorite.category}/${favorite.uid}`} className="text-decoration-none text-dark">
+										{favorite.name}
+									</Link>
+								) : (
+									<span>{favorite.name}</span>
+								)}
+								<button
+									className="btn btn-sm ms-2"
+									onClick={() => actions.removeFavorite(favorite.name)}
+								>
+									<FontAwesomeIcon icon={faTrash} />
+								</button>
+							</li>
+						))
+					) : (
+						<li className="dropdown-item">(Empty)</li>
+					)}
+				</ul>
+			</div>
+		</nav>
+	);
 };

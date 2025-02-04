@@ -1,39 +1,27 @@
-/* 
-    General Styles
-*/
-/* 
-    General Styles
-*/
-
-@import url("https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap");
-
 body {
-  color: #000;
-  font-family: "Press Start 2P", cursive;
+  margin: 0;
+  background-size: cover; 
+  background-repeat: repeat; 
+  background-position: center; 
+  height: 100vh; 
+  padding: 0px 90px 0px 90px;
+}
+.navbar img {
+  width: 150px;
+  margin-left: 15px;
+  background-color: rgb(29, 149, 230);
+}
+.btn {
+  transition: all 0.3s ease;
 }
 
-
-.card-container {
-  width: 24rem;
+.btn.clicked {
+  background-color: gold;
+  color: white;
+  transform: scale(1.1);
 }
 
-.btn-container {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-}
-
-.btn-more {
-  float: left;
-  left: -60px;
-  position:relative;
-  top: -10px;
-  vertical-align: bottom;
-}
-
-.btn-fav {
-  float: right;
-  left: -40px;
-  position:relative;
-  top: -10px;
+.btn.clicked:hover {
+  background-color: orange;
+  transform: scale(1.2);
 }

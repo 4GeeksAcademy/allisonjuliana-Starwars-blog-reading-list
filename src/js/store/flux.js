@@ -1,101 +1,76 @@
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
-			demo: [
-				{
-					title: "FIRST",
-					background: "white",
-					initial: "white"
-				},
-				{
-					title: "SECOND",
-					background: "white",
-					initial: "white"
-				}
-			],
-			characters: [],
-			favorites: [],
+			people: [],
 			planets: [],
-			specificCharacters: {},
-			specificPlanet: {},
-
+			favorites: []
 		},
 		actions: {
-			// Use getActions to call a function within a fuction
-			exampleFunction: () => {
-				getActions().changeColor(0, "green");
-			},
-			loadSomeData: () => {
-				/**
-					fetch().then().then(data => setStore({ "foo": data.bar }))
-				*/
-			},
-			changeColor: (index, color) => {
-				//get the store
-				const store = getStore();
+			getPeople: () => {
+				fetch("https://www.swapi.tech/api/people/")
+					.then((res) => res.json())
+					.then((data) => {
+						if (!Array.isArray(data.results)) throw new Error("Invalid response format");
 
-				//we have to loop the entire demo array to look for the respective index
-				//and change its color
-				const demo = store.demo.map((elm, i) => {
-					if (i === index) elm.background = color;
-					return elm;
+						return Promise.all(
+							data.results.map((character) =>
+								fetch(`https://www.swapi.tech/api/people/${character.uid}`)
+									.then((res) => res.json())
+									.then((characterData) => characterData.result)
+									.catch((err) => {
+										console.error(`Error fetching character ${character.uid}`, err);
+										return null;
+									})
+							)
+						);
+					})
+					.then((completeCharacters) => {
+						const filteredCharacters = completeCharacters.filter((char) => char !== null);
+						setStore({ people: filteredCharacters });
+					})
+					.catch((err) => console.error("Could not load characters", err));
+			},
+			getPlanets: () => {
+				fetch("https://www.swapi.tech/api/planets/")
+					.then((res) => res.json())
+					.then((data) => {
+						if (!Array.isArray(data.results)) throw new Error("Invalid response format");
+
+						return Promise.all(
+							data.results.map((planets) =>
+								fetch(`https://www.swapi.tech/api/planets/${planets.uid}`)
+									.then((res) => res.json())
+									.then((planetsData) => planetsData.result)
+									.catch((err) => {
+										console.error(`Error fetching planets ${planets.uid}`, err);
+										return null;
+									})
+							)
+						);
+					})
+					.then((completePlanets) => {
+						const filteredPlanets = completePlanets.filter((char) => char !== null);
+						setStore({ planets: filteredPlanets });
+					})
+					.catch((err) => console.error("Could not load planets", err));
+			},
+
+			addFavorite: (item, category, uid) => {
+				const store = getStore();
+				if (!store.favorites.some((fav) => fav.name === item)) {
+					setStore({
+						favorites: [...store.favorites, { name: item, category, uid }]
+					});
+				}
+			},
+			removeFavorite: (itemName) => {
+				const store = getStore();
+				setStore({
+					favorites: store.favorites.filter(fav => fav.name !== itemName),
 				});
-
-				//reset the global store
-				setStore({ demo: demo });
 			},
-			loadCharacters: () => {
-				fetch("https://swapi.tech/api/people/")
-					.then(response => response.json())
-					.then(data => {
-						setStore({ characters: data.results });
-					})
-					.catch(error => console.log(error));
-
-			},
-
-			loadPlanets: () => {
-				fetch("https://swapi.tech/api/planets/")
-					.then(response => response.json())
-					.then(data => {
-						setStore({ planets: data.results });
-					})
-					.catch(error => console.log(error));
-			},
-
-			loadSpecificCharacter: async (theid) => {
-				const resp = await fetch(`https://swapi.dev/api/people/${theid}`)
-					.then(response => response.json())
-					.then(data => {
-						setStore({ specificCharacter: data });
-					})
-					.catch(error => console.log(error));
-			},
-
-			loadSpecificPlanet: async (theid) => {
-				const resp = await fetch(`https://swapi.dev/api/planets/${theid}`)
-					.then(response => response.json())
-					.then(data => {
-						setStore({ specificPlanet: data });
-					})
-					.catch(error => console.log(error));
-			},
-
-			addFavorites: (item) => {
-				const store = getStore();
-				setStore({ favorites: [...store.favorites, item] });
-			},
-
-
-			deleteFavorites: (item) => {
-				const store = getStore();
-				const favorites = store.favorites;
-				const index = favorites.indexOf(item);
-				favorites.splice(index, 1);
-				setStore({ favorites });
-			},
-		}
+		},
 	};
-};
+}
 
-export default getState;
+export default getState; 

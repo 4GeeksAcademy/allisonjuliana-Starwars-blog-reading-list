@@ -1,20 +1,15 @@
-import React from "react";
-// import React, { useEffect, useState } from "react";
-import rigoImage from "../../img/rigo-baby.jpg";
+import React, { useContext } from "react";
 import "../../styles/home.css";
-import CharacterCards from "../component/characterCards";
-import PlanetsCards from "../component/planetsCards";
+import { Context } from "../store/appContext";
+import { People } from "../component/People";
+import { Planets } from "../component/Planets";
 
 export const Home = () => {
+	const { store, actions } = useContext(Context);
 	return (
 		<div className="text-center mt-5">
-			<h1>StarWars Blog!</h1>
-
-			<CharacterCards />
-
-			<PlanetsCards />
-
-
+			<People />
+			<Planets />
 		</div>
-	);
+	)
 };
